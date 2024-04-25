@@ -1,0 +1,193 @@
+openapi: 3.0.0
+info:
+  title: Auto Catalog Service API
+  description: API для управления информацией об автомобилях
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+paths:
+  /auto-catalog/create:
+    post:
+      summary: Создание автомобилей
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reg_nums:
+                  type: array
+                  items:
+                    type: string
+                  example: ["1234AB", "5678CD"]
+      responses:
+        '200':
+          description: Успешное создание автомобилей
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '400':
+          description: Некорректный запрос
+  /auto-catalog/list:
+    get:
+      summary: Получение списка автомобилей
+      parameters:
+        - in: query
+          name: reg_num
+          schema:
+            type: string
+          description: Регистрационный номер автомобиля
+        # Добавьте другие параметры запроса здесь
+      responses:
+        '200':
+          description: Успешное получение списка автомобилей
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Car'
+        '400':
+          description: Некорректный запрос
+  /auto-catalog/delete:
+    delete:
+      summary: Удаление автомобиля
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CarId'
+      responses:
+        '200':
+          description: Успешное удаление автомобиля
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '400':
+          description: Некорректный запрос
+  /auto-catalog/update:
+    put:
+      summary: Обновление информации об автомобиле
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCar'
+      responses:
+        '200':
+          description: Успешное обновление информации об автомобиле
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '400':
+          description: Некорректный запрос
+components:
+  schemas:
+    Success:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+    Car:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Идентификатор автомобиля
+        reg_num:
+          type: string
+          description: Регистрационный номер автомобиля
+        mark:
+          type: string
+          description: Марка автомобиля
+        model:
+          type: string
+          description: Модель автомобиля
+        year_from:
+          type: integer
+          description: Год выпуска автомобиля (от)
+        year_to:
+          type: integer
+          description: Год выпуска автомобиля (до)
+        owner_name:
+          type: string
+          description: Имя владельца
+        owner_surname:
+          type: string
+          description: Фамилия владельца
+        owner_patronymic:
+          type: string
+          description: Отчество владельца
+    CarId:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 123
+    UpdateCar:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Идентификатор автомобиля
+        reg_num:
+          type: string
+          description: Регистрационный номер автомобиля
+        mark:
+          type: string
+          description: Марка автомобиля
+        model:
+          type: string
+          description: Модель автомобиля
+        year:
+          type: integer
+          description: Год выпуска автомобиля
+        owner_name:
+          type: string
+          description: Имя владельца
+        owner_surname:
+          type: string
+          description: Фамилия владельца
+        owner_patronymic:
+          type: string
+          description: Отчество владельца
+    CarFilter:
+      type: object
+      properties:
+        reg_num:
+          type: string
+          description: Регистрационный номер автомобиля
+        mark:
+          type: string
+          description: Марка автомобиля
+        model:
+          type: string
+          description: Модель автомобиля
+        year_from:
+          type: integer
+          description: Год выпуска автомобиля (от)
+        year_to:
+          type: integer
+          description: Год выпуска автомобиля (до)
+        owner_name:
+          type: string
+          description: Имя владельца
+        owner_surname:
+          type: string
+          description: Фамилия владельца
+        owner_patronymic:
+          type: string
+          description: Отчество владельца
+        page:
+          type: integer
+          description: Номер страницы
+        page_size:
+          type: integer
+          description: Размер страницы
